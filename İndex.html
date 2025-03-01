@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Bot Panel</title>
+    <style>
+        :root {
+            --primary: #1a1f2c;
+            --secondary: #2c3347;
+            --accent: #ff3860;
+            --text: #e1e5ee;
+            --highlight: #ff386080;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .control-section, .user-section {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: 2px solid var(--highlight);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 15px var(--highlight);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--highlight);
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .user-button {
+            background: var(--secondary);
+            color: var(--accent);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .status {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2em;
+            color: var(--accent);
+        }
+
+        .made-by {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: var(--accent);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .status.active {
+            animation: pulse 2s infinite;
+        }
+
+        .dragon-icon {
+            font-size: 2em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="dragon-icon">🐉</i>Dragon Bot Panel</h1>
+        </div>
+        <div class="panel">
+            <div class="control-section">
+                <div class="status">Status: Idle</div>
+                <div class="input-group">
+                    <input type="text" id="roomCode" placeholder="Room Code">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="botName" placeholder="Bot Name">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="message" placeholder="Message">
+                </div>
+                <button id="startBot">Launch Attack</button>
+                <button id="stopBot">Terminate</button>
+                <button id="sendMessage">Send Message</button>
+                <button id="autoDraw">Auto Draw</button>
+                <button id="report">Mass Report</button>
+            </div>
+            <div class="user-section">
+                <div class="user-list"></div>
+            </div>
+        </div>
+    </div>
+    <div class="made-by">Made by Neo</div>
+    <script>
+        const ws = new WebSocket('wss://proxy.cors-anywhere.herokuapp.com/wss://gartic.io');
+        ws.binaryType = 'arraybuffer';
+        
+        const socket = {
+            send: data => {
+                const encoded = new TextEncoder().encode(data);
+                ws.send(encoded.buffer);
+            }
+        };
+
+        ws.onmessage = event => {
+            const decoded = new TextDecoder().decode(event.data);
+            handleMessage(decoded);
+        };
+
+        function handleMessage(msg) {
+            if(msg.includes('"5"')) {
+                const data = JSON.parse(msg.split('42')[1]);
+                socket.id = data[2];
+                updateStatus('Connected');
+            }
+        }
+
+        function updateStatus(status) {
+            document.querySelector('.status').textContent = `Status: ${status}`;
+            document.querySelector('.status').classList.toggle('active', status !== 'Idle');
+        }
+
+        document.getElementById('startBot').onclick = () => {
+            const room = document.getElementById('roomCode').value;
+            const name = document.getElementById('botName').value;
+            socket.send(JSON.stringify({type: 'join', room, name}));
+            updateStatus('Attacking');
+        };
+
+        document.getElementById('stopBot').onclick = () => {
+            socket.send(JSON.stringify({type: 'leave'}));
+            updateStatus('Idle');
+        };
+
+        document.getElementById('sendMessage').onclick = () => {
+            const msg = document.getElementById('message').value;
+            socket.send(JSON.stringify({type: 'message', content: msg}));
+        };
+
+        document.getElementById('autoDraw').onclick = () => {
+            socket.send(JSON.stringify({type: 'draw'}));
+        };
+
+        document.getElementById('report').onclick = () => {
+            socket.send(JSON.stringify({type: 'report'}));
+        };
+    </script>
+</body>
+</html>
