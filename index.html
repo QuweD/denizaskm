@@ -309,7 +309,7 @@
             async function enterRoom(roomCode) {
                 setRandomPlayerName();
                 try {
-                    const logoutResponse = await fetch("/logout");
+                    const logoutResponse = await fetch("https://gartic.io/logout");
                     if (!logoutResponse.ok) throw new Error('Çıkış başarısız');
 
                     const roomResponse = await fetch("https://gartic.io/server?check=1&v3=1&room=" + roomCode);
