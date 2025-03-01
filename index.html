@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Bot Panel</title>
+    <title>Dragon Panel</title>
     <style>
         :root {
-            --primary: #1a1f2c;
-            --secondary: #2c3347;
-            --accent: #ff3860;
-            --text: #e1e5ee;
-            --highlight: #ff386080;
+            --primary: #0a0e17;
+            --secondary: #1a1f2c;
+            --accent: #ff0844;
+            --text: #ffffff;
+            --highlight: #ff084480;
         }
 
         * {
@@ -25,6 +25,9 @@
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 8, 68, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 8, 68, 0.1) 0%, transparent 20%);
         }
 
         .container {
@@ -44,6 +47,7 @@
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--accent);
         }
 
         .header {
@@ -58,10 +62,12 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent);
         }
 
         .input-group {
             margin-bottom: 15px;
+            position: relative;
         }
 
         input {
@@ -87,7 +93,7 @@
             margin: 8px 0;
             border: none;
             border-radius: 8px;
-            background: var(--accent);
+            background: linear-gradient(45deg, var(--accent), #ff4b2b);
             color: var(--text);
             font-weight: bold;
             cursor: pointer;
@@ -110,6 +116,7 @@
             padding: 15px;
             background: var(--primary);
             border-radius: 10px;
+            border: 1px solid var(--accent);
         }
 
         .user-button {
@@ -119,6 +126,7 @@
             border-radius: 6px;
             font-size: 14px;
             text-align: center;
+            border: 1px solid var(--accent);
         }
 
         .status {
@@ -126,6 +134,7 @@
             margin: 15px 0;
             font-size: 1.2em;
             color: var(--accent);
+            text-shadow: 0 0 5px var(--accent);
         }
 
         .made-by {
@@ -135,48 +144,122 @@
             color: var(--accent);
             font-size: 14px;
             opacity: 0.8;
+            text-shadow: 0 0 5px var(--accent);
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+        .avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
         }
 
-        .status.active {
-            animation: pulse 2s infinite;
+        .avatar-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
         }
 
-        .dragon-icon {
-            font-size: 2em;
-            margin-right: 10px;
-            vertical-align: middle;
+        .avatar-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
         }
 
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--primary);
+            transition: .4s;
+            border-radius: 34px;
+            border: 2px solid var(--accent);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 2px;
+            background-color: var(--accent);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: var(--text);
+        }
+
+        .bot-counter {
+            font-size: 1.2em;
+            color: var(--accent);
+            text-align: center;
+            margin: 10px 0;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--highlight);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="dragon-icon">🐉</i>Dragon Bot Panel</h1>
+            <h1>🐉 Dragon Bot Panel</h1>
         </div>
         <div class="panel">
             <div class="control-section">
-                <div class="status">Status: Idle</div>
+                <div class="bot-counter">Bots: 0</div>
                 <div class="input-group">
-                    <input type="text" id="roomCode" placeholder="Room Code">
+                    <input type="text" id="roomCode" placeholder="Room Code" class="room-input">
                 </div>
                 <div class="input-group">
-                    <input type="text" id="botName" placeholder="Bot Name">
+                    <input type="text" id="botName" placeholder="Bot Name" class="bot-nick">
                 </div>
                 <div class="input-group">
-                    <input type="text" id="message" placeholder="Message">
+                    <input type="text" id="message" placeholder="Message" class="message-input">
                 </div>
-                <button id="startBot">Launch Attack</button>
-                <button id="stopBot">Terminate</button>
-                <button id="sendMessage">Send Message</button>
-                <button id="autoDraw">Auto Draw</button>
-                <button id="report">Mass Report</button>
+                <div class="avatar-container">
+                    <input type="number" class="avatar-input" placeholder="Avatar ID" min="0" max="36">
+                    <label class="avatar-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Random Avatar</span>
+                    <img class="avatar-preview">
+                </div>
+                <button onclick="window.applySettings()" class="apply-button">Apply Settings</button>
+                <button onclick="window.toggleBot()" class="toggle-button">Start Attack</button>
+                <button onclick="window.sendMessage()" class="send-button">Send Message</button>
+                <button onclick="window.exitFromRooms()" class="exit-button">Exit Room</button>
+                <button onclick="window.sendReport()" class="report-button">Mass Report</button>
+                <button onclick="window.autoDraw()" class="draw-button">Auto Draw</button>
             </div>
             <div class="user-section">
                 <div class="user-list"></div>
@@ -185,58 +268,208 @@
     </div>
     <div class="made-by">Made by Neo</div>
     <script>
-        const ws = new WebSocket('wss://proxy.cors-anywhere.herokuapp.com/wss://gartic.io');
-        ws.binaryType = 'arraybuffer';
-        
-        const socket = {
-            send: data => {
-                const encoded = new TextEncoder().encode(data);
-                ws.send(encoded.buffer);
+        (function() {
+            'use strict';
+
+            const config = {
+                Rooms: [],
+                userAgents: ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"],
+                proxies: ["https://cors-anywhere.herokuapp.com/", "https://api.allorigins.win/raw?url=", "https://proxy.cors.sh/"],
+                delayBetweenEntries: 500,
+                reexecutionDelay: 1900,
+                randomAvatar: false,
+                selectedAvatar: 0,
+                settings: {
+                    nickName: "",
+                    roomCode: "",
+                    avatarId: 0
+                }
+            };
+
+            const drawCommands = [
+                '[6,"13"]','[5,"xFFC926"]','[3,0,0,767,448]','[5,"xFFFFFF"]',
+                '[1,6,215,97,200,317]','[1,6,219,102,256,314]','[1,6,282,99,291,315]',
+                '[1,6,336,110,290,227]','[1,6,197,264,251,257]','[1,6,380,112,379,309]',
+                '[1,6,365,87,390,73]','[1,6,289,224,329,312]','[1,6,422,118,484,147]',
+                '[1,6,486,150,434,217]','[1,6,420,115,425,311]','[1,6,433,220,475,315]',
+                '[1,6,529,100,509,314]','[1,6,531,108,565,320]','[1,6,510,243,563,242]'
+            ];
+
+            let wsList = [];
+            let isRunning = false;
+            let roomusers = [];
+            let kickedUsers = new Set();
+
+            function init() {
+                loadSettings();
+                setInterval(updateUserList, 100);
+                setupEventListeners();
             }
-        };
 
-        ws.onmessage = event => {
-            const decoded = new TextDecoder().decode(event.data);
-            handleMessage(decoded);
-        };
-
-        function handleMessage(msg) {
-            if(msg.includes('"5"')) {
-                const data = JSON.parse(msg.split('42')[1]);
-                socket.id = data[2];
-                updateStatus('Connected');
+            function loadSettings() {
+                const savedSettings = localStorage.getItem('dragonBotSettings');
+                if(savedSettings) {
+                    config.settings = JSON.parse(savedSettings);
+                    document.querySelector('.bot-nick').value = config.settings.nickName;
+                    document.querySelector('.room-input').value = config.settings.roomCode;
+                    document.querySelector('.avatar-input').value = config.settings.avatarId;
+                    updateAvatarPreview(config.settings.avatarId);
+                }
             }
-        }
 
-        function updateStatus(status) {
-            document.querySelector('.status').textContent = `Status: ${status}`;
-            document.querySelector('.status').classList.toggle('active', status !== 'Idle');
-        }
+            function generateInvisibleChar() {
+                const invisibleChars = ['\u200B', '\u200C', '\u200D', '\u2061', '\u2062', '\u2063'];
+                return invisibleChars[Math.floor(Math.random() * invisibleChars.length)];
+            }
 
-        document.getElementById('startBot').onclick = () => {
-            const room = document.getElementById('roomCode').value;
-            const name = document.getElementById('botName').value;
-            socket.send(JSON.stringify({type: 'join', room, name}));
-            updateStatus('Attacking');
-        };
+            function addInvisibleCharsToMessage(message) {
+                return message.split('').map(char => char + generateInvisibleChar()).join('');
+            }
 
-        document.getElementById('stopBot').onclick = () => {
-            socket.send(JSON.stringify({type: 'leave'}));
-            updateStatus('Idle');
-        };
+            function getRandomUserAgent() {
+                return config.userAgents[Math.floor(Math.random() * config.userAgents.length)];
+            }
 
-        document.getElementById('sendMessage').onclick = () => {
-            const msg = document.getElementById('message').value;
-            socket.send(JSON.stringify({type: 'message', content: msg}));
-        };
+            function getRandomProxy() {
+                return config.proxies[Math.floor(Math.random() * config.proxies.length)];
+            }
 
-        document.getElementById('autoDraw').onclick = () => {
-            socket.send(JSON.stringify({type: 'draw'}));
-        };
+            async function enterRoom(roomCode) {
+                try {
+                    const proxy = getRandomProxy();
+                    const ws = new WebSocket(proxy + 'wss://gartic.io/socket.io/?EIO=3&transport=websocket');
+                    
+                    ws.onopen = () => {
+                        const botData = {
+                            nick: addInvisibleCharsToMessage(document.querySelector('.bot-nick').value),
+                            avatar: config.randomAvatar ? Math.floor(Math.random() * 36) : config.selectedAvatar,
+                            room: roomCode
+                        };
+                        ws.send('42' + JSON.stringify(['join', botData]));
+                        startAntiAfk(ws);
+                    };
 
-        document.getElementById('report').onclick = () => {
-            socket.send(JSON.stringify({type: 'report'}));
-        };
+                    ws.onmessage = handleMessage;
+                    wsList.push(ws);
+                    updateBotCounter();
+                } catch(error) {
+                    console.error('Connection failed, retrying with different proxy...');
+                    setTimeout(() => enterRoom(roomCode), 1000);
+                }
+            }
+
+            function handleMessage(event) {
+                const msg = event.data;
+                if(msg.includes('"users"')) {
+                    roomusers = JSON.parse(msg.split('42')[1])[1];
+                    updateUserList();
+                }
+            }
+
+            function startAntiAfk(ws) {
+                setInterval(() => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        ws.send('42["ping"]');
+                    }
+                }, 5000);
+            }
+
+            function updateUserList() {
+                const userListElement = document.querySelector('.user-list');
+                userListElement.innerHTML = '';
+                const addedUsers = new Set();
+
+                roomusers.forEach(user => {
+                    if(!addedUsers.has(user.id) && !kickedUsers.has(user.id)) {
+                        const button = document.createElement('button');
+                        button.className = 'user-button';
+                        button.textContent = user.nick;
+                        button.onclick = () => kickUser(user.id);
+                        userListElement.appendChild(button);
+                        addedUsers.add(user.id);
+                    }
+                });
+            }
+
+            function kickUser(userId) {
+                wsList.forEach(ws => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        ws.send(`42["kick",{"userId":"${userId}"}]`);
+                    }
+                });
+                kickedUsers.add(userId);
+                updateUserList();
+            }
+
+            function updateBotCounter() {
+                document.querySelector('.bot-counter').textContent = `Bots: ${wsList.length}`;
+            }
+
+            window.toggleBot = function() {
+                isRunning = !isRunning;
+                const button = document.querySelector('.toggle-button');
+                button.textContent = isRunning ? 'Stop Attack' : 'Start Attack';
+                button.style.background = isRunning ? 'linear-gradient(45deg, #ff0844, #ff4b2b)' : 'linear-gradient(45deg, #4CAF50, #45a049)';
+
+                if(isRunning) {
+                    const roomCode = document.querySelector('.room-input').value;
+                    enterRoom(roomCode);
+                    setInterval(() => {
+                        if(isRunning) enterRoom(roomCode);
+                    }, config.reexecutionDelay);
+                }
+            };
+
+            window.sendMessage = function() {
+                const message = document.querySelector('.message-input').value;
+                wsList.forEach(ws => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        ws.send(`42["message",{"text":"${addInvisibleCharsToMessage(message)}"}]`);
+                    }
+                });
+            };
+
+            window.exitFromRooms = function() {
+                wsList.forEach(ws => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        ws.send('42["leave"]');
+                        ws.close();
+                    }
+                });
+                wsList = [];
+                roomusers = [];
+                kickedUsers.clear();
+                updateBotCounter();
+                updateUserList();
+            };
+
+            window.autoDraw = function() {
+                wsList.forEach(ws => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        drawCommands.forEach((cmd, index) => {
+                            setTimeout(() => ws.send('42["draw",' + cmd + ']'), index * 50);
+                        });
+                    }
+                });
+            };
+
+            window.sendReport = function() {
+                wsList.forEach(ws => {
+                    if(ws.readyState === WebSocket.OPEN) {
+                        ws.send('42["report"]');
+                    }
+                });
+            };
+
+            window.applySettings = function() {
+                config.settings.nickName = document.querySelector('.bot-nick').value;
+                config.settings.roomCode = document.querySelector('.room-input').value;
+                config.settings.avatarId = parseInt(document.querySelector('.avatar-input').value) || 0;
+                localStorage.setItem('dragonBotSettings', JSON.stringify(config.settings));
+            };
+
+            init();
+        })();
     </script>
 </body>
 </html>
