@@ -1,280 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dragon Panel</title>
+    <title>Hile Menüsü</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        :root {
-            --primary: #0a0e17;
-            --secondary: #1a1f2c;
-            --accent: #ff0844;
-            --text: #ffffff;
-            --highlight: #ff084480;
-        }
-
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
         }
-
-        body {
-            background: var(--primary);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 8, 68, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 8, 68, 0.1) 0%, transparent 20%);
-        }
-
-        .container {
-            max-width: 1400px;
+        .hile-menu {
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-        }
-
-        .panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .control-section, .user-section {
-            background: var(--secondary);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--accent);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px var(--accent);
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            border: 2px solid var(--highlight);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            border-color: var(--accent);
-            outline: none;
-            box-shadow: 0 0 15px var(--highlight);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(45deg, var(--accent), #ff4b2b);
-            color: var(--text);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--highlight);
-        }
-
-        .user-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            max-height: 600px;
-            overflow-y: auto;
-            padding: 15px;
-            background: var(--primary);
+            background-color: #2c2c2c;
             border-radius: 10px;
-            border: 1px solid var(--accent);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
-
-        .user-button {
-            background: var(--secondary);
-            color: var(--accent);
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+        }
+        .control-panel, .user-panel {
+            margin-bottom: 20px;
+        }
+        .control-panel input, .control-panel button {
+            width: 100%;
             padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
-            border: 1px solid var(--accent);
-        }
-
-        .status {
-            text-align: center;
-            margin: 15px 0;
-            font-size: 1.2em;
-            color: var(--accent);
-            text-shadow: 0 0 5px var(--accent);
-        }
-
-        .made-by {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            color: var(--accent);
-            font-size: 14px;
-            opacity: 0.8;
-            text-shadow: 0 0 5px var(--accent);
-        }
-
-        .avatar-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .avatar-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .avatar-preview {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid var(--accent);
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--primary);
-            transition: .4s;
-            border-radius: 34px;
-            border: 2px solid var(--accent);
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 2px;
-            background-color: var(--accent);
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-            background-color: var(--text);
-        }
-
-        .bot-counter {
-            font-size: 1.2em;
-            color: var(--accent);
-            text-align: center;
-            margin: 10px 0;
-            text-shadow: 0 0 5px var(--accent);
-        }
-
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
+            margin: 5px 0;
+            border: none;
             border-radius: 5px;
         }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--highlight);
+        .control-panel button {
+            background-color: #ff4444;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .control-panel button:hover {
+            background-color: #ff6666;
+        }
+        .user-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #3c3c3c;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .user-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .user-button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #ffcc00;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🐉 Dragon Bot Panel</h1>
-        </div>
-        <div class="panel">
-            <div class="control-section">
-                <div class="bot-counter">Bots: 0</div>
-                <div class="input-group">
-                    <input type="text" id="roomCode" placeholder="Room Code" class="room-input">
-                </div>
-                <div class="input-group">
-                    <input type="text" id="botName" placeholder="Bot Name" class="bot-nick">
-                </div>
-                <div class="input-group">
-                    <input type="text" id="message" placeholder="Message" class="message-input">
-                </div>
-                <div class="avatar-container">
-                    <input type="number" class="avatar-input" placeholder="Avatar ID" min="0" max="36">
-                    <label class="avatar-switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Random Avatar</span>
-                    <img class="avatar-preview">
-                </div>
-                <button onclick="window.applySettings()" class="apply-button">Apply Settings</button>
-                <button onclick="window.toggleBot()" class="toggle-button">Start Attack</button>
-                <button onclick="window.sendMessage()" class="send-button">Send Message</button>
-                <button onclick="window.exitFromRooms()" class="exit-button">Exit Room</button>
-                <button onclick="window.sendReport()" class="report-button">Mass Report</button>
-                <button onclick="window.autoDraw()" class="draw-button">Auto Draw</button>
+    <div class="hile-menu">
+        <div class="control-panel">
+            <h2>🛠️ Hile Menüsü</h2>
+            <div class="bot-counter">Botlar: 0</div>
+            <input type="text" class="room-input" placeholder="Oda Kodu Girin..." oninput="updateRoomCode()">
+            <input type="text" class="message-input" placeholder="Mesaj Girin...">
+            <button class="send-button" onclick="window.sendMessage()">Mesaj Gönder</button>
+            <input type="text" class="bot-nick" placeholder="Bot Takma Adı...">
+            <div class="avatar-container">
+                <input type="number" class="avatar-input" placeholder="Avatar" min="0" max="36" oninput="window.updateAvatarPreview(this.value)">
+                <label class="avatar-switch">
+                    <input type="checkbox" onchange="window.toggleRandomAvatar()">
+                    <span class="slider"></span>
+                </label>
+                <span style="color: #89CFF0;">Rastgele Avatar</span>
+                <img class="avatar-preview">
             </div>
-            <div class="user-section">
-                <div class="user-list"></div>
-            </div>
+            <button class="apply-button" onclick="window.applySettings()">Ayarları Uygula</button>
+            <button class="toggle-button" onclick="window.toggleBot()">Botları Başlat</button>
+            <button class="exit-button" onclick="window.exitFromRooms()">Odadan Çık</button>
+            <button class="report-button" onclick="window.sendReport()">Rapor Gönder</button>
+            <button class="draw-button" onclick="window.autoDraw()">Otomatik Çizim</button>
         </div>
+        <div class="user-panel">
+            <h2>👥 Kullanıcı Listesi</h2>
+            <div class="user-list"></div>
+        </div>
+        <div class="footer">Made by Neo</div>
     </div>
-    <div class="made-by">Made by Neo</div>
     <script>
         (function() {
             'use strict';
 
             const config = {
                 Rooms: [],
-                userAgents: ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"],
-                proxies: ["https://cors-anywhere.herokuapp.com/", "https://api.allorigins.win/raw?url=", "https://proxy.cors.sh/"],
+                proxies: ["https://www.blockaway.net/"],
+                playerName: "",
+                roomCode: "",
                 delayBetweenEntries: 500,
                 reexecutionDelay: 1900,
                 randomAvatar: false,
@@ -286,187 +122,331 @@
                 }
             };
 
-            const drawCommands = [
-                '[6,"13"]','[5,"xFFC926"]','[3,0,0,767,448]','[5,"xFFFFFF"]',
-                '[1,6,215,97,200,317]','[1,6,219,102,256,314]','[1,6,282,99,291,315]',
-                '[1,6,336,110,290,227]','[1,6,197,264,251,257]','[1,6,380,112,379,309]',
-                '[1,6,365,87,390,73]','[1,6,289,224,329,312]','[1,6,422,118,484,147]',
-                '[1,6,486,150,434,217]','[1,6,420,115,425,311]','[1,6,433,220,475,315]',
-                '[1,6,529,100,509,314]','[1,6,531,108,565,320]','[1,6,510,243,563,242]'
-            ];
-
             let wsList = [];
             let isRunning = false;
+            let messageInterval;
+            let mainInterval;
+            let afkIntervals = [];
+            let isAfkPaused = false;
             let roomusers = [];
             let kickedUsers = new Set();
+            let userListUpdateInterval;
 
-            function init() {
-                loadSettings();
-                setInterval(updateUserList, 100);
-                setupEventListeners();
-            }
+            const drawCommands = [
+                '[6,"13"]',
+                '[5,"xFFC926"]',
+                '[3,0,0,767,448]',
+                '[5,"xFFFFFF"]',
+                '[1,6,215,97,200,317]',
+                '[1,6,219,102,256,314]',
+                '[1,6,282,99,291,315]',
+                '[1,6,336,110,290,227]',
+                '[1,6,197,264,251,257]',
+                '[1,6,380,112,379,309]',
+                '[1,6,365,87,390,73]',
+                '[1,6,289,224,329,312]',
+                '[1,6,422,118,484,147]',
+                '[1,6,486,150,434,217]',
+                '[1,6,420,115,425,311]',
+                '[1,6,433,220,475,315]',
+                '[1,6,529,100,509,314]',
+                '[1,6,531,108,565,320]',
+                '[1,6,510,243,563,242]'
+            ];
+
+            window.toggleBot = toggleBot;
+            window.sendMessage = sendMessage;
+            window.exitFromRooms = exitFromRooms;
+            window.autoDraw = autoDraw;
+            window.toggleRandomAvatar = toggleRandomAvatar;
+            window.updateAvatarPreview = updateAvatarPreview;
+            window.applySettings = applySettings;
+            window.sendReport = sendReport;
 
             function loadSettings() {
-                const savedSettings = localStorage.getItem('dragonBotSettings');
+                const savedSettings = localStorage.getItem('frozenBotSettings');
                 if(savedSettings) {
                     config.settings = JSON.parse(savedSettings);
                     document.querySelector('.bot-nick').value = config.settings.nickName;
                     document.querySelector('.room-input').value = config.settings.roomCode;
                     document.querySelector('.avatar-input').value = config.settings.avatarId;
                     updateAvatarPreview(config.settings.avatarId);
+                    updateRoomCode();
                 }
-            }
-
-            function generateInvisibleChar() {
-                const invisibleChars = ['\u200B', '\u200C', '\u200D', '\u2061', '\u2062', '\u2063'];
-                return invisibleChars[Math.floor(Math.random() * invisibleChars.length)];
-            }
-
-            function addInvisibleCharsToMessage(message) {
-                return message.split('').map(char => char + generateInvisibleChar()).join('');
-            }
-
-            function getRandomUserAgent() {
-                return config.userAgents[Math.floor(Math.random() * config.userAgents.length)];
-            }
-
-            function getRandomProxy() {
-                return config.proxies[Math.floor(Math.random() * config.proxies.length)];
-            }
-
-            async function enterRoom(roomCode) {
-                try {
-                    const proxy = getRandomProxy();
-                    const ws = new WebSocket(proxy + 'wss://gartic.io/socket.io/?EIO=3&transport=websocket');
-                    
-                    ws.onopen = () => {
-                        const botData = {
-                            nick: addInvisibleCharsToMessage(document.querySelector('.bot-nick').value),
-                            avatar: config.randomAvatar ? Math.floor(Math.random() * 36) : config.selectedAvatar,
-                            room: roomCode
-                        };
-                        ws.send('42' + JSON.stringify(['join', botData]));
-                        startAntiAfk(ws);
-                    };
-
-                    ws.onmessage = handleMessage;
-                    wsList.push(ws);
-                    updateBotCounter();
-                } catch(error) {
-                    console.error('Connection failed, retrying with different proxy...');
-                    setTimeout(() => enterRoom(roomCode), 1000);
-                }
-            }
-
-            function handleMessage(event) {
-                const msg = event.data;
-                if(msg.includes('"users"')) {
-                    roomusers = JSON.parse(msg.split('42')[1])[1];
-                    updateUserList();
-                }
-            }
-
-            function startAntiAfk(ws) {
-                setInterval(() => {
-                    if(ws.readyState === WebSocket.OPEN) {
-                        ws.send('42["ping"]');
-                    }
-                }, 5000);
             }
 
             function updateUserList() {
                 const userListElement = document.querySelector('.user-list');
+                const botNick = document.querySelector('.bot-nick').value.trim();
                 userListElement.innerHTML = '';
                 const addedUsers = new Set();
 
+                wsList.forEach(ws => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send('42[32]');
+                    }
+                });
+
                 roomusers.forEach(user => {
-                    if(!addedUsers.has(user.id) && !kickedUsers.has(user.id)) {
+                    if (user.nick && 
+                        user.nick !== "kirallah" && 
+                        !addedUsers.has(user.id) && 
+                        !user.nick.replace(/\s+/g, '').includes(botNick.replace(/\s+/g, ''))) {
                         const button = document.createElement('button');
                         button.className = 'user-button';
                         button.textContent = user.nick;
-                        button.onclick = () => kickUser(user.id);
+                        button.onclick = () => kickUser(user.id, user.nick);
                         userListElement.appendChild(button);
                         addedUsers.add(user.id);
                     }
                 });
             }
 
-            function kickUser(userId) {
-                wsList.forEach(ws => {
-                    if(ws.readyState === WebSocket.OPEN) {
-                        ws.send(`42["kick",{"userId":"${userId}"}]`);
-                    }
-                });
-                kickedUsers.add(userId);
-                updateUserList();
-            }
-
-            function updateBotCounter() {
-                document.querySelector('.bot-counter').textContent = `Bots: ${wsList.length}`;
-            }
-
-            window.toggleBot = function() {
-                isRunning = !isRunning;
-                const button = document.querySelector('.toggle-button');
-                button.textContent = isRunning ? 'Stop Attack' : 'Start Attack';
-                button.style.background = isRunning ? 'linear-gradient(45deg, #ff0844, #ff4b2b)' : 'linear-gradient(45deg, #4CAF50, #45a049)';
-
-                if(isRunning) {
-                    const roomCode = document.querySelector('.room-input').value;
-                    enterRoom(roomCode);
-                    setInterval(() => {
-                        if(isRunning) enterRoom(roomCode);
-                    }, config.reexecutionDelay);
+            function kickUser(userId, userNick) {
+                if (!kickedUsers.has(userId)) {
+                    wsList.forEach(ws => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            ws.send(`42[11,${ws.id},"kick ${userNick}"]`);
+                            setTimeout(() => {
+                                ws.send(`42[45,${ws.id},["${userId}",true]]`);
+                                ws.send(`42[45,${ws.id},["${userId}",false]]`);
+                            }, 100);
+                        }
+                    });
+                    kickedUsers.add(userId);
+                    updateUserList();
                 }
-            };
+            }
 
-            window.sendMessage = function() {
-                const message = document.querySelector('.message-input').value;
+            function applySettings() {
+                config.settings.nickName = document.querySelector('.bot-nick').value;
+                config.settings.roomCode = document.querySelector('.room-input').value;
+                config.settings.avatarId = parseInt(document.querySelector('.avatar-input').value) || 0;
+                localStorage.setItem('frozenBotSettings', JSON.stringify(config.settings));
+                updateRoomCode();
+            }
+
+            function generateInvisibleChar() {
+                const invisibleChars = ['\u200B', '\u200C', '\u200D', '\u2061', '\u2062', '\u2063', '\u2064', '\u2066', '\u17b4', '\u17b5', '\u2068', '\u2069'];
+                return invisibleChars[Math.floor(Math.random() * invisibleChars.length)];
+            }
+
+            function addInvisibleCharsToMessage(message) {
+                let result = '';
+                for (let i = 0; i < message.length; i++) {
+                    result += message[i] + generateInvisibleChar();
+                }
+                return result;
+            }
+
+            function getRandomName() {
+                let name = document.querySelector('.bot-nick').value.trim();
+                let result = '';
+                for (let i = 0; i < name.length; i++) {
+                    result += name[i] + generateInvisibleChar();
+                }
+                result += generateInvisibleChar();
+                return result.trim();
+            }
+
+            function setRandomPlayerName() {
+                config.playerName = getRandomName();
+            }
+
+            function updateRoomCode() {
+                const roomInput = document.querySelector('.room-input');
+                const roomCode = roomInput.value.trim();
+                if(roomCode) {
+                    config.Rooms = [roomCode];
+                    config.settings.roomCode = roomCode;
+                }
+            }
+
+            function autoDraw() {
+                isAfkPaused = true;
+                setTimeout(() => { isAfkPaused = false; }, 7000);
+                
                 wsList.forEach(ws => {
                     if(ws.readyState === WebSocket.OPEN) {
-                        ws.send(`42["message",{"text":"${addInvisibleCharsToMessage(message)}"}]`);
+                        ws.send(`42[34,${ws.id}]`);
+                        let index = 0;
+                        const drawInterval = setInterval(() => {
+                            if(index < drawCommands.length) {
+                                ws.send(`42[10,${ws.id},${drawCommands[index]}]`);
+                                index++;
+                            } else {
+                                clearInterval(drawInterval);
+                            }
+                        }, 50);
                     }
                 });
-            };
+            }
 
-            window.exitFromRooms = function() {
+            function exitFromRooms() {
                 wsList.forEach(ws => {
-                    if(ws.readyState === WebSocket.OPEN) {
-                        ws.send('42["leave"]');
-                        ws.close();
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send(`42[11,${ws.id},"q"]`);
+                        setTimeout(() => {
+                            ws.send(`42[24,${ws.id}]`);
+                        }, 100);
                     }
                 });
                 wsList = [];
                 roomusers = [];
-                kickedUsers.clear();
-                updateBotCounter();
                 updateUserList();
-            };
+                kickedUsers.clear();
+                document.querySelector('.bot-counter').textContent = 'Botlar: 0';
+            }
 
-            window.autoDraw = function() {
+            function sendReport() {
                 wsList.forEach(ws => {
-                    if(ws.readyState === WebSocket.OPEN) {
-                        drawCommands.forEach((cmd, index) => {
-                            setTimeout(() => ws.send('42["draw",' + cmd + ']'), index * 50);
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send(`42[35,${ws.id}]`);
+                    }
+                });
+            }
+
+            async function enterRoom(roomCode) {
+                setRandomPlayerName();
+                try {
+                    const logoutResponse = await fetch("/logout");
+                    if (!logoutResponse.ok) throw new Error('Çıkış başarısız');
+
+                    const roomResponse = await fetch("https://gartic.io/server?check=1&v3=1&room=" + roomCode);
+                    if (!roomResponse.ok) throw new Error('Oda kontrolü başarısız');
+
+                    const roomText = await roomResponse.text();
+                    const server = roomText.split("//")[1].split(".")[0];
+                    const ccode = roomText.split("c=")[1];
+
+                    const ws = new WebSocket('wss://' + server + '.gartic.io/socket.io/?c=' + ccode + '&EIO=3&transport=websocket');
+                    wsList.push(ws);
+
+                    ws.onopen = () => {
+                        let botData = {
+                            v: 20000,
+                            nick: getRandomName(),
+                            avatar: config.randomAvatar ? Math.floor(Math.random() * 36) : config.selectedAvatar,
+                            platform: 0,
+                            sala: roomCode.slice(-4)
+                        };
+                        ws.send(`42[3,${JSON.stringify(botData)}]`);
+                    };
+
+                    ws.onmessage = (msg) => {
+                        if (msg.data.indexOf('42["5"') !== -1) {
+                            let objlist = JSON.parse('["5"' + msg.data.split('42["5"')[1]);
+                            ws.id = objlist[2];
+                            roomusers = objlist[5];
+                            updateUserList();
+                            updateBotCounter();
+                            startAntiAfk(ws.id);
+                            setTimeout(() => {
+                                ws.send(`42[11,${ws.id},"sa"]`);
+                            }, 10);
+                        }
+                        if (msg.data.indexOf('42["23"') !== -1) {
+                            let user = JSON.parse("{" + msg.data.split("{")[1].split("}")[0] + "}");
+                            if (!roomusers.some(existingUser => existingUser.id === user.id)) {
+                                roomusers.push(user);
+                                updateUserList();
+                            }
+                        }
+                        if (msg.data.indexOf('42["24"') !== -1) {
+                            let userId = msg.data.split(",")[1].split('"')[1];
+                            roomusers = roomusers.filter(u => u.id !== userId);
+                            updateUserList();
+                        }
+                        if (msg.data.indexOf('42["33"') !== -1) {
+                            try {
+                                let userList = JSON.parse(msg.data.split('42["33",')[1]);
+                                roomusers = userList;
+                                updateUserList();
+                            } catch(e) {
+                                console.error(e);
+                            }
+                        }
+                    };
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            function startAntiAfk(botId) {
+                const interval = setInterval(() => {
+                    if (!isAfkPaused) {
+                        wsList.forEach(ws => {
+                            if (ws.readyState === WebSocket.OPEN && ws.id === botId) {
+                                ws.send(`42[25,${botId}]`);
+                            }
                         });
                     }
-                });
-            };
+                }, 5000);
+                afkIntervals.push(interval);
+            }
 
-            window.sendReport = function() {
-                wsList.forEach(ws => {
-                    if(ws.readyState === WebSocket.OPEN) {
-                        ws.send('42["report"]');
+            function updateBotCounter() {
+                let botCounter = document.querySelector('.bot-counter');
+                let currentBots = parseInt(botCounter.textContent.split(': ')[1]);
+                botCounter.textContent = `Botlar: ${currentBots + 1}`;
+            }
+
+            function toggleRandomAvatar() {
+                const switch_elem = document.querySelector('.avatar-switch input');
+                const avatar_input = document.querySelector('.avatar-input');
+                config.randomAvatar = switch_elem.checked;
+                avatar_input.disabled = config.randomAvatar;
+                if(config.randomAvatar) {
+                    avatar_input.value = '';
+                    updateAvatarPreview('');
+                }
+            }
+
+            function updateAvatarPreview(value) {
+                const preview = document.querySelector('.avatar-preview');
+                const numValue = parseInt(value);
+                if(numValue >= 0 && numValue <= 36) {
+                    preview.src = `https://gartic.io/static/images/avatar/svg/${numValue}.svg`;
+                    preview.style.display = 'inline';
+                    config.selectedAvatar = numValue;
+                    config.settings.avatarId = numValue;
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+
+            function sendMessage() {
+                const messageInput = document.querySelector('.message-input');
+                const message = messageInput.value;
+                if (message && wsList.length > 0) {
+                    const firstBot = wsList[0];
+                    if (firstBot && firstBot.readyState === WebSocket.OPEN) {
+                        firstBot.send(`42[11,${firstBot.id},"${addInvisibleCharsToMessage(message)}"]`);
                     }
-                });
-            };
+                }
+            }
 
-            window.applySettings = function() {
-                config.settings.nickName = document.querySelector('.bot-nick').value;
-                config.settings.roomCode = document.querySelector('.room-input').value;
-                config.settings.avatarId = parseInt(document.querySelector('.avatar-input').value) || 0;
-                localStorage.setItem('dragonBotSettings', JSON.stringify(config.settings));
-            };
+            function toggleBot() {
+                const toggleButton = document.querySelector('.toggle-button');
+                isRunning = !isRunning;
+                toggleButton.textContent = isRunning ? 'Botları Durdur' : 'Botları Başlat';
+                toggleButton.style.backgroundColor = isRunning ? '#ff4444' : '#4CAF50';
+
+                if (isRunning) {
+                    enterAllRooms();
+                    mainInterval = setInterval(enterAllRooms, config.reexecutionDelay);
+                } else {
+                    clearInterval(mainInterval);
+                }
+            }
+
+            async function enterAllRooms() {
+                if (!isRunning) return;
+                for (const roomCode of config.Rooms) {
+                    await enterRoom(roomCode);
+                    await new Promise(resolve => setTimeout(resolve, config.delayBetweenEntries));
+                }
+            }
 
             init();
         })();
